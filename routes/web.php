@@ -14,10 +14,19 @@ Route::get('/services', [ServiceController::class, 'index'])
 Route::get('/services/create', [ServiceController::class, 'create'])
     ->middleware('auth');
 
+Route::post('/services', [ServiceController::class, 'store'])
+    ->middleware('auth');
+
 Route::get('/services/{service}', [ServiceController::class, 'show'])
     ->middleware('auth');
 
+Route::get('/services/{service}/offers', [ServiceController::class, 'offers'])
+    ->middleware('auth');
+
 Route::get('/services/{service}/edit', [ServiceController::class, 'edit'])
+    ->middleware('auth');
+
+Route::put('/services/{service}', [ServiceController::class, 'update'])
     ->middleware('auth');
 
 Route::delete('/services/{service}', [ServiceController::class, 'destroy'])
