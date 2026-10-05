@@ -19,6 +19,21 @@
         Message: {{ $offer->message }}
     </p>
 
+  @if ($offer->status === 'pending' && $service->status === 'open')
+
+    <form method="POST" action="/offers/{{ $offer->id }}/accept">
+
+        @csrf
+        @method('PUT')
+
+        <button type="submit">
+            Accept Offer
+        </button>
+
+    </form>
+
+@endif
+
     <hr>
 
 @endforeach
