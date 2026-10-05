@@ -3,6 +3,7 @@
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ServiceController;
+use App\Http\Controllers\OfferController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -30,6 +31,24 @@ Route::put('/services/{service}', [ServiceController::class, 'update'])
     ->middleware('auth');
 
 Route::delete('/services/{service}', [ServiceController::class, 'destroy'])
+    ->middleware('auth');
+
+Route::get('/services/{service}/offers/create', [ServiceController::class, 'createOffer'])
+    ->middleware('auth');
+
+Route::post('/services/{service}/offers', [ServiceController::class, 'storeOffer'])
+    ->middleware('auth');
+
+Route::get('/my-offers', [OfferController::class, 'index'])
+    ->middleware('auth');
+
+Route::get('/offers/{offer}/edit', [OfferController::class, 'edit'])
+    ->middleware('auth');
+
+Route::put('/offers/{offer}', [OfferController::class, 'update'])
+    ->middleware('auth');
+
+Route::delete('/offers/{offer}', [OfferController::class, 'destroy'])
     ->middleware('auth');
 
 Route::get('/dashboard', function () {

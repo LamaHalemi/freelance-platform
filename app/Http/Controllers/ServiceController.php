@@ -80,7 +80,11 @@ class ServiceController extends Controller
     {
         Gate::authorize('viewAny', Service::class);
 
+        if (auth()->user()->role === 'freelancer') {
+        $services = Service::where('status', 'open')->get();
+        } else {
         $services = Service::where('user_id', auth()->id())->get();
+        }
 
         return view('services.index', compact('services'));
     }
@@ -90,15 +94,40 @@ class ServiceController extends Controller
     {
         Gate::authorize('view', $service);
 
-        return $service;
+        return view('services.show', compact('service'));
+    }
+
+    public function createOffer(Service $service)
+    {
+        Gate::authorize('view', $service);
+
+        return view('offers.create', compact('service'));
+    }
+
+    public function storeOffer(Request $request, Service $service)
+    {
+        Gate::authorize('view', $service);
+
+        $data = $request->validate([
+        'price' => 'required|numeric|min:0',
+        'message' => 'required|string',
+        'delivery_days' => 'required|integer|min:1',
+        ]);
+
+        $data['service_id'] = $service->id;
+        $data['user_id'] = auth()->id();
+
+        \App\Models\Offer::create($data);
+
+        return redirect('/services/' . $service->id);
     }
 
     public function offers(Service $service)
     {
-    Gate::authorize('view', $service);
+        Gate::authorize('view', $service);
 
-    $offers = $service->offers;
+        $offers = $service->offers;
 
-    return view('services.offers', compact('service', 'offers'));
+        return view('services.offers', compact('service', 'offers'));
     }
 }
