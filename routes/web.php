@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ServiceController;
 use App\Http\Controllers\OfferController;
 use App\Http\Controllers\ReviewController;
+use App\Http\Controllers\SkillController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -68,6 +69,18 @@ Route::post('/services/{service}/reviews', [ReviewController::class, 'store'])
     ->middleware('auth');
 
 Route::get('/services/{service}/reviews', [ReviewController::class, 'index'])
+    ->middleware('auth');
+
+Route::get('/my-skills', [SkillController::class, 'index'])
+    ->middleware('auth');
+
+Route::post('/my-skills/add', [SkillController::class, 'add'])
+    ->middleware('auth');
+
+Route::delete('/my-skills/{skill}', [SkillController::class, 'remove'])
+    ->middleware('auth');
+
+Route::put('/my-skills/sync', [SkillController::class, 'sync'])
     ->middleware('auth');
 
 Route::get('/dashboard', function () {
