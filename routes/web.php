@@ -54,6 +54,12 @@ Route::delete('/offers/{offer}', [OfferController::class, 'destroy'])
 Route::put('/offers/{offer}/accept', [OfferController::class, 'accept'])
     ->middleware('auth');
 
+Route::get('/my-projects', [ServiceController::class, 'myProjects'])
+    ->middleware('auth');
+
+Route::put('/projects/{service}/complete', [ServiceController::class, 'complete'])
+    ->middleware('auth');
+
 Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');

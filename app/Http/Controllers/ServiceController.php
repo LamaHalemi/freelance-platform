@@ -130,4 +130,38 @@ class ServiceController extends Controller
 
         return view('services.offers', compact('service', 'offers'));
     }
+
+    public function myProjects()
+    {
+        $projects = Service::where('status', 'in_progress')
+            ->whereHas('offers', function ($query) {
+                $query->where('user_id', auth()->id())
+                    ->where('status', 'accepted');
+            })
+            ->get();
+
+        return view('services.projects', compact('projects'));
+    }
+
+    public function complete(Service $service)
+    {
+        $hasAcceptedOffer = $service->offers()
+            ->where('user_id', auth()->id())
+            ->where('status', 'accepted')
+            ->exists();
+
+        if (!$hasAcceptedOffer) {
+            abort(403);
+        }
+
+        if ($service->status !== 'in_progress') {
+            abort(400, 'This project is not in progress.');
+        }
+
+        $service->update([
+            'status' => 'completed',
+        ]);
+
+        return redirect('/my-projects');
+    }
 }
