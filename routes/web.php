@@ -4,6 +4,7 @@ use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ServiceController;
 use App\Http\Controllers\OfferController;
+use App\Http\Controllers\ReviewController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -58,6 +59,15 @@ Route::get('/my-projects', [ServiceController::class, 'myProjects'])
     ->middleware('auth');
 
 Route::put('/projects/{service}/complete', [ServiceController::class, 'complete'])
+    ->middleware('auth');
+
+Route::get('/services/{service}/reviews/create', [ReviewController::class, 'create'])
+    ->middleware('auth');
+
+Route::post('/services/{service}/reviews', [ReviewController::class, 'store'])
+    ->middleware('auth');
+
+Route::get('/services/{service}/reviews', [ReviewController::class, 'index'])
     ->middleware('auth');
 
 Route::get('/dashboard', function () {

@@ -6,6 +6,15 @@ use Illuminate\Database\Eloquent\Model;
 
 class Review extends Model
 {
+
+protected $fillable = [
+    'service_id',
+    'customer_id',
+    'freelancer_id',
+    'rating',
+    'comment',
+];
+
     public function service()
     {
         return $this->belongsTo(Service::class);

@@ -30,4 +30,16 @@
     <a href="/services/{{ $service->id }}/offers/create">
         Make an Offer
     </a>
-@endif  
+@endif
+@if (
+    auth()->user()->role === 'customer' &&
+    auth()->id() === $service->user_id &&
+    $service->status === 'completed' &&
+    !$service->reviews()->where('customer_id', auth()->id())->exists()
+)
+
+    <a href="/services/{{ $service->id }}/reviews/create">
+        Add Review
+    </a>
+
+@endif
