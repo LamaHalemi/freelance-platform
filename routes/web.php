@@ -6,6 +6,7 @@ use App\Http\Controllers\ServiceController;
 use App\Http\Controllers\OfferController;
 use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\SkillController;
+use App\Http\Controllers\AdminController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -82,6 +83,33 @@ Route::delete('/my-skills/{skill}', [SkillController::class, 'remove'])
 
 Route::put('/my-skills/sync', [SkillController::class, 'sync'])
     ->middleware('auth');
+
+Route::get('/admin/dashboard', [AdminController::class, 'dashboard'])
+    ->middleware(['auth', 'role:admin']);
+
+Route::get('/admin/users', [AdminController::class, 'users'])
+    ->middleware(['auth', 'role:admin']);
+
+Route::get('/admin/categories', [AdminController::class, 'categories'])
+    ->middleware(['auth', 'role:admin']);
+
+Route::get('/admin/services', [AdminController::class, 'services'])
+    ->middleware(['auth', 'role:admin']);
+
+Route::get('/admin/reviews', [AdminController::class, 'reviews'])
+    ->middleware(['auth', 'role:admin']);
+
+Route::delete('/admin/users/{user}', [AdminController::class, 'deleteUser'])
+    ->middleware(['auth', 'role:admin']);
+
+Route::delete('/admin/categories/{category}', [AdminController::class, 'deleteCategory'])
+    ->middleware(['auth', 'role:admin']);
+
+Route::delete('/admin/services/{service}', [AdminController::class, 'deleteService'])
+    ->middleware(['auth', 'role:admin']);
+
+Route::delete('/admin/reviews/{review}', [AdminController::class, 'deleteReview'])
+    ->middleware(['auth', 'role:admin']);
 
 Route::get('/dashboard', function () {
     return view('dashboard');
