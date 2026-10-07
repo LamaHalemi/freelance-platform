@@ -76,17 +76,43 @@ class ServiceController extends Controller
     }
 
 
-    public function index()
+    public function index(Request $request)
     {
         Gate::authorize('viewAny', Service::class);
 
+        $query = Service::query();
+
         if (auth()->user()->role === 'freelancer') {
-        $services = Service::where('status', 'open')->get();
+            $query->where('status', 'open');
         } else {
-        $services = Service::where('user_id', auth()->id())->get();
+            $query->where('user_id', auth()->id());
         }
 
-        return view('services.index', compact('services'));
+        $query->when($request->search, function ($query) use ($request) {
+        $query->where('title', 'like', '%' . $request->search . '%');
+        });
+
+        $query->when($request->category_id, function ($query) use ($request) {
+        $query->where('category_id', $request->category_id);
+        });
+
+        $query->when($request->filled('min_budget'), function ($query) use ($request) {
+        $query->where('budget', '>=', $request->min_budget);
+        });
+
+        $query->when($request->filled('max_budget'), function ($query) use ($request) {
+        $query->where('budget', '<=', $request->max_budget);
+        });
+
+        $query->when($request->status, function ($query) use ($request) {
+        $query->where('status', $request->status);
+        });
+
+        $services = $query->paginate(2)->withQueryString();
+
+        $categories = \App\Models\Category::all();
+
+        return view('services.index', compact('services', 'categories'));
     }
 
 
